@@ -72,8 +72,6 @@ React_Passive_fUS_preprocessing
 %% PreProcessing: sync datastreams ; construct trials ; form epochs
 React_Passive_epoch_preprocessing
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
-
 %% Sound-evoked response analysis
 React_Passive_SER_analysis
 
