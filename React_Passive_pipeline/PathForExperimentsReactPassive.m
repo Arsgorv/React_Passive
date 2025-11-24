@@ -81,7 +81,7 @@ data = {
     % Kosichka
     'Kosichka', 'first', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
     'Kosichka', 'first', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'first', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
+    'Kosichka', 'first', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251120_1_m_p06'};
     
     'Kosichka', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251117_1_n_p19'};
     'Kosichka', 'first', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251114_1_n_p05'};
@@ -89,7 +89,7 @@ data = {
     
     'Kosichka', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
     'Kosichka', 'second', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
+    'Kosichka', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251121_2_m_p06'};
     
     'Kosichka', 'second', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251118_2_n_p19'};
     'Kosichka', 'second', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
