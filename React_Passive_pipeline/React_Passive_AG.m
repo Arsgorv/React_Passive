@@ -45,11 +45,6 @@ Notes:
 - Be very careful with night sessions as after Repositioning, there is a region full of zeros, which must be taken into account.
 %}
 
-% Set the working paths
-% data5_path = 'Z:';
-% cd([data5_path filesep 'Arsenii' filesep 'React_Passive' filesep 'Codes'])
-% AddMyPaths_AG
-
 %% Select sessions
 % Form the list of sessions
 selection = 3;
@@ -79,6 +74,9 @@ React_Passive_SER_analysis
 
 %% Reactivation analysis
 React_Passive_reactivations_analysis
+
+%% Decoding analysis
+% Decode sound identity from SER and React
 
 %% Cross-correlation analysis
 React_Passive_cross_corr_analysis

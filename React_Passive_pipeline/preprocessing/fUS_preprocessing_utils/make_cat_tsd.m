@@ -12,7 +12,7 @@ sliceLetters = 'ABCD';
 
 for s = 1:length(sliceLetters)
     slice_label = sliceLetters(s);
-    rpFile = [datapath filesep 'fUS' filesep 'RP_' tail '_' slice_label '.mat'];
+    rpFile = [datapath filesep 'fUS' filesep 'RP_data_' tail '_slice_' slice_label '.mat'];
 
     if ~exist(rpFile, 'file')
         % No such slice in this session, skip
