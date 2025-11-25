@@ -1,37 +1,54 @@
-function React_Passive_SleepScoring_preprocessing
-% Don't forget to put ExpeInfo.mat in the target folder
-Ferret_ProcessData_BM
+function React_Passive_SleepScoring_preprocessing(sessions)
+% Full original preprocessing of the OB project can be found here: Ferret_ProcessData_BM.m
 
+%% Prepare data
+github_location = {'D:\Arsenii\GitHub\'; ''};
+python_location = 'C:\Users\Arsenii Goriachenkov\.conda\envs\sleepscoring\python.exe';
 
-
-
-%% Make LFP
-load(fullfile(datapath, 'ephys', 'ExpeInfo.mat'))
-BaseFileName = ['M' num2str(ExpeInfo.nmouse) '_' ExpeInfo.date '_' ExpeInfo.SessionType];
-% Create the xml
-WriteExpeInfoToXml(ExpeInfo)
-
-
-% copyfile(fullfile(ExpeInfo.PreProcessingInfo.FolderForConcatenation_Ephys{f}, 'amplifier.xml'),...
-%     fullfile(FinalFolder, [BaseFileName '-' sprintf('%02d',f) '.xml']));
-% delete([ExpeInfo.PreProcessingInfo.FolderForConcatenation_Ephys{f} filesep 'amplifier.xml']);
-
-SetCurrentSession([BaseFileName '.xml'])
-MakeData_LFP_PluggedOnly([fullfile(datapath, 'ephys')],ExpeInfo)
-
-%% Calculate smooth brain powers
-for sess = 1:numel(session_dlc)
-    disp('Calculating brain power...')
-    disp([num2str(length(session_dlc)-sess + 1) '/' num2str(length(session_dlc)) ' left'])
-    disp(['Running session: ' session_dlc{sess}])    
-    calc_brain_gamma_powers(session_dlc{sess})
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}])
+    
+    fix_folder_structure(sessions{sess})
+    copy_ExpeInfo(sessions{sess})
+    
+    if ispc 
+        % Windows LB1
+        convertEvents2Mat_wrapper(datapath, python_location, github_location{1});
+    else
+        % Linux
+        convertEvents2Mat_wrapper(datapath, github_location{2});
+    end
 end
 
+%% PreProcess data
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}]) 
+    cd(fullfile(sessions{sess}, 'ephys'))
+    
+    GUI_StepOne_ExperimentInfo
+end
 
+%% Calculate necessary spectrograms
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}])
+    
+    calculate_spectrograms(sessions{sess},'')
+end
 
+%% Do the SleepScoring
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}])
+    cd(fullfile(sessions{sess}, 'ephys'))
+    
+    SleepScoring_Ferret_FV_BAMG('recompute', 1, 'full_ob', 1)
+end
 
-
-
-
+%% Calculate brain powers
+sm_w = 0.1;
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}])
+    
+    calculate_brain_power(fullfile(sessions{sess}, 'ephys'), sm_w)
+end
 
 end

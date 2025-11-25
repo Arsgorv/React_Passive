@@ -1,27 +1,29 @@
-function React_Passive_SleepScoring_preprocessing
-% Don't forget to put ExpeInfo.mat in the target folder
-Ferret_ProcessData_BM
+function React_Passive_SleepScoring_preprocessing(sessions)
+% Full original preprocessing of the OB project can be found here: Ferret_ProcessData_BM.m
 
+%% Prepare data
+for sess = 1:numel(sessions)
+    disp(['Working on ' sessions{sess}])
+fix_folder_structure(datapath)
+copy_ExpeInfo(datapath)
+% For the next step you must either have linux or create a linux environment on windows
+% for LB1
+pyExe = 'C:\Users\Arsenii Goriachenkov\.conda\envs\sleepscoring\python.exe';
+convertEvents2Mat_wrapper(datapath, pyExe);
+% for Linux computers
+convertEvents2Mat_wrapper(datapath);
 
+%% PreProcess data
+cd(fullfile(datapath, 'ephys'))
+GUI_StepOne_ExperimentInfo
 
+%% Calculate necessary spectrograms
+calculate_spectrograms(datapath)
 
-%% Make LFP
-load(fullfile(datapath, 'ephys', 'ExpeInfo.mat'))
- MakeData_LFP_PluggedOnly([fullfile(datapath, 'ephys')],ExpeInfo)
+%% Do the SleepScoring
+SleepScoring_Ferret_FV_BAMG('recompute', 1, 'full_ob', 1)
 
 %% Calculate smooth brain powers
-for sess = 1:numel(session_dlc)
-    disp('Calculating brain power...')
-    disp([num2str(length(session_dlc)-sess + 1) '/' num2str(length(session_dlc)) ' left'])
-    disp(['Running session: ' session_dlc{sess}])    
-    calc_brain_gamma_powers(session_dlc{sess})
-end
-
-
-
-
-
-
-
+calc_brain_gamma_powers(datapath)
 
 end
