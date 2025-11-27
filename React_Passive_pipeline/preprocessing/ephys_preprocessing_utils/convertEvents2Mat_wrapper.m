@@ -1,4 +1,4 @@
-function convertEvents2Mat_wrapper(datapath, pyExe)
+function convertEvents2Mat_wrapper(datapath, arg1, arg2)
 % Run convertEvents2Mat.py on each recording1/continuous and recording1/events
 % inside [datapath filesep 'ephys'].
 %

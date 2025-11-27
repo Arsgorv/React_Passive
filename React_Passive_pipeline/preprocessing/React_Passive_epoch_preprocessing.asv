@@ -1,15 +1,13 @@
 function React_Passive_epoch_preprocessing
 % Epochs:
 %{
-1. Define common timeline (extract triggers ; extract stimulus identity)
+1. Define common timeline (extract triggers ; 
 
 2. Create Epochs
 - fUS epoch
 - Trial epoch
 - Stimulus_1 epoch
 - Stimulus_2 epoch
-
-3. apply fUS denoising pipeline and define fUS noise epoch
 %}
 
 

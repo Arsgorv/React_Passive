@@ -22,8 +22,10 @@ for sess = 1:numel(sessions)
     disp(['Working on ' sessions{sess}]) 
     draw_masks(sessions{sess});
 end
+
+%% %%%%%%%%%%%%%%%%%%%%%%%% NOT USED %%%%%%%%%%%%%%%%%%%%%%%%
     
-%% FIGURE: Overview of the dataset
+%% NOT USED: FIGURE: Overview of the dataset
 
 % slots = {['C'],['D','E','F','G','H','I'], ['J','K','L','M','N','O'],['P','Q','R','S','T','U']}; %Chabichou
 slots = {['F','P','G','W','D','Q'],['H','S','L','U','E','R'],['I','T','C','N','J','V'],['M', 'O', 'K']}; % full ds
@@ -62,10 +64,9 @@ for i = 1:length(slots)
 
 end
 
-%% Scratching_denoise
+%% NOT USED: Scratching_denoise
 Scratching_denoise
 
-%% %%%%%%%%%%%%%%%%%%%%%%%% NOT USED %%%%%%%%%%%%%%%%%%%%%%%%
 %% NOT USED: Reposition_block_images
 %{     
     % 20230802 AG: I'm not happy with RepositionBlockImages approach and will try to use Jeffrey's run_normcorre_batch.m

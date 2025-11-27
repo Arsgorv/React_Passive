@@ -1,4 +1,4 @@
-function React_Passive_AG()
+function React_Passive_AG
 %(slot_code, slice, comp, preprocessing)
 %{
 %
@@ -69,6 +69,8 @@ React_Passive_epoch_preprocessing
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 
+%% Tonotopy
+
 %% Sound-evoked response analysis
 React_Passive_SER_analysis
 
@@ -91,9 +93,13 @@ React_Passive_vasomotion_analysis
 
 %% Paper figures
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
+% NOT USED
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Below needs to be sorted later as well as other Florian codes
-%%
+%
 % convert_data_to_A_Bergel_format
 
 % Permanent parameters
@@ -137,7 +143,7 @@ React_Passive_vasomotion_analysis
 % end
 % 
 
-%% ---- Moved it to Figs_AG ---- III) Concatenate data and store it in 'compo' groupped by session.
+% ---- Moved it to Figs_AG ---- III) Concatenate data and store it in 'compo' groupped by session.
 
 %
 % clear accuracy_all
@@ -165,7 +171,7 @@ React_Passive_vasomotion_analysis
 
 % a = 1;
 
-%% Perfusion analysis to control that reactivations are not due to an increase in the blood volume
+% Perfusion analysis to control that reactivations are not due to an increase in the blood volume
 % Load the preprocessed data
 % Apply a hippocampus mask
 % Average the CBV in each phase and store it in 'perfu'
@@ -186,7 +192,7 @@ React_Passive_vasomotion_analysis
 % end
 % save('perfuH.mat', 'perfu')
 
-%% ADDITIONAL exploratory analysis
+% ADDITIONAL exploratory analysis
 % % Do analyses on sessions on the same slice (dPCA and RS with next)
 % for n = 1:size(slice,2)
 %     slice=slice{n};
