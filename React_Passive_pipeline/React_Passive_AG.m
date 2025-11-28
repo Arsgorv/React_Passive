@@ -56,13 +56,13 @@ Dir{3} = PathForExperimentsReactPassive('Kosichka', 'all', 'all', 'all');
 sessions = Dir{selection}.path';
 
 %% PreProcessing: Sleep Scoring
-React_Passive_SleepScoring_preprocessing
+Master_SleepScoring_preproc
 
 %% PreProcessing: Behaviour (pupil ; baphy)
-React_Passive_Behaviour_preprocessing
+Master_behaviour_preproc
 
 %% PreProcessing: fUS
-React_Passive_fUS_preprocessing
+Master_fUS_preproc
 
 %% PreProcessing: sync datastreams ; construct trials ; form epochs
 React_Passive_epoch_preprocessing

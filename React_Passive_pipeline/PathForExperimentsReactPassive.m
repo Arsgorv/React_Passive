@@ -108,16 +108,16 @@ for i = 1:size(data, 1)
         for j = 1:length(data{i, 6})
             session_name = data{i, 6}{j};
             session_path = fullfile(data{i, 5}, session_name);
-            Dir.path{end+1} = session_path; %#ok<AGROW>
-            Dir.name{end+1} = session_name; %#ok<AGROW>
+            Dir.path{end+1} = session_path;
+            Dir.name{end+1} = session_name;
             
             % Load ExpeInfo if available
             expe_info_path = fullfile(session_path, 'ExpeInfo.mat');
             if exist(expe_info_path, 'file')
                 load(expe_info_path, 'ExpeInfo');
-                Dir.ExpeInfo{end+1} = ExpeInfo; %#ok<AGROW>
+                Dir.ExpeInfo{end+1} = ExpeInfo;
             else
-                Dir.ExpeInfo{end+1} = []; %#ok<AGROW>
+                Dir.ExpeInfo{end+1} = [];
                 warning(['ExpeInfo.mat not found for session: ' session_name]);
             end
         end
