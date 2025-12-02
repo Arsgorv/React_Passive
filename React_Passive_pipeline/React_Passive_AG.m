@@ -1,3 +1,4 @@
+
 function React_Passive_AG
 %(slot_code, slice, comp, preprocessing)
 %{
@@ -58,16 +59,16 @@ sessions = Dir{selection}.path';
 %% PreProcessing: Sleep Scoring
 Master_SleepScoring_preproc
 
-%% PreProcessing: Behaviour (pupil ; baphy)
-Master_behaviour_preproc
-
 %% PreProcessing: fUS
 Master_fUS_preproc
 
-%% PreProcessing: sync datastreams ; construct trials ; form epochs
-React_Passive_epoch_preprocessing
+%% PreProcessing: sync datastreams -> reconstruct -> make
+Master_data_sync_preproc
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
+% React_Passive_epoch_preprocessing
+%% PreProcessing: Behaviour (pupil ; baphy)
+Master_behaviour_preproc
 
 %% Tonotopy
 
