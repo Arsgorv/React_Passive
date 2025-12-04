@@ -57,18 +57,23 @@ Dir{3} = PathForExperimentsReactPassive('Kosichka', 'all', 'all', 'all');
 sessions = Dir{selection}.path';
 
 %% PreProcessing: Sleep Scoring
-Master_SleepScoring_preproc
+Master_SleepScoring_preproc(sessions)
 
 %% PreProcessing: fUS
-Master_fUS_preproc
+Master_fUS_preproc(sessions)
 
-%% PreProcessing: sync datastreams -> reconstruct -> make
-Master_data_sync_preproc
+%% PreProcessing: align all datastreams -> extract trial information -> reconstruct missed triggers -> make Epochs
+Master_data_sync_preproc(sessions, true)
+
+%% PreProcessing: Behaviour (pupil ; baphy)
+% React_Passive_epoch_preprocessing
+% Master_behaviour_preproc(sessions)
+
+
+
+
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
-% React_Passive_epoch_preprocessing
-%% PreProcessing: Behaviour (pupil ; baphy)
-Master_behaviour_preproc
 
 %% Tonotopy
 

@@ -20,10 +20,17 @@ function B = RP_parse_baphy_passive(datapath)
 % It assumes that running the .m file puts globalparams, exptparams,
 % exptevents into the workspace (standard Baphy behaviour).
 
-baphy_dir = fullfile(datapath,'baphy');
+baphy_dir = fullfile(datapath,'stim');
 m_list = dir(fullfile(baphy_dir,'*.m'));
 if isempty(m_list)
-    error('RP_parse_baphy_passive:NoMfile','No *.m Baphy file found in %s',baphy_dir);
+    baphy_dir = fullfile(datapath,'baphy');
+    m_list = dir(fullfile(baphy_dir,'*.m'));
+    if contains(datapath, 'Chabichou')
+        m_list = dir(fullfile(baphy_dir,'*.mat'));
+    end
+    if isempty(m_list)
+        error('RP_parse_baphy_passive:NoMfile','No *.m Baphy file found in %s',baphy_dir);
+    end
 end
 if numel(m_list) > 1
     warning('RP_parse_baphy_passive:MultipleMfile','Multiple m-files, using first: %s', m_list(1).name);
@@ -32,8 +39,11 @@ end
 m_file = fullfile(m_list(1).folder, m_list(1).name);
 disp(['[RP_parse_baphy_passive] Running m-file: ' m_file]);
 
-run(m_file);   % defines globalparams, exptparams, exptevents
-
+if contains(m_file, '.mat')
+    load(m_file);
+else
+    run(m_file);   % defines globalparams, exptparams, exptevents
+end
 if ~exist('exptevents','var')
     error('RP_parse_baphy_passive:NoExptevents','exptevents not found after running %s',m_file);
 end
@@ -49,13 +59,16 @@ B.trial_id     = trial_list(:);
 B.stim_name    = cell(n_trials,1);
 B.cat_id       = nan(n_trials,1);
 B.category     = cell(n_trials,1);
-B.is_silence   = zeros(n_trials,1);
-B.t_pre_start  = nan(n_trials,1);
-B.t_pre_stop   = nan(n_trials,1);
+% B.is_silence   = zeros(n_trials,1);
+% B.t_pre_start  = nan(n_trials,1);
+% B.t_pre_stop   = nan(n_trials,1);
 B.t_stim_start = nan(n_trials,1);
 B.t_stim_stop  = nan(n_trials,1);
-B.t_post_start = nan(n_trials,1);
-B.t_post_stop  = nan(n_trials,1);
+% B.t_post_start = nan(n_trials,1);
+% B.t_post_stop  = nan(n_trials,1);
+
+% optional: store the "index" string (e.g. 'cat668')
+B.stim_index   = cell(n_trials,1);
 
 for it = 1:n_trials
     tr = trial_list(it);
@@ -74,10 +87,11 @@ for it = 1:n_trials
     
     % Stim
     s_idx = find(strncmp(notes,'Stim ',5));
+    note_stim = '';
     if ~isempty(s_idx)
-        note_stim = notes{s_idx(1)};
-        B.t_stim_start(it) = starts(s_idx(1));
-        B.t_stim_stop(it)  = stops(s_idx(1));
+        note_stim = notes{s_idx(2)};
+        B.t_stim_start(it) = starts(s_idx(2));
+        B.t_stim_stop(it)  = stops(s_idx(2));
         
         % parse sound name: "Stim , NAME , ..."
         parts = strsplit(note_stim,' , ');
@@ -86,36 +100,71 @@ for it = 1:n_trials
         else
             B.stim_name{it} = note_stim;
         end
+        
+        % stim = exptevents((i-1)*9+6).Note; etc.
+        parts_space = strsplit(note_stim,' ');
+        if numel(parts_space) >= 3
+            stim_token = parts_space{3};          % e.g. 'cat668_1'
+            parts_us = strsplit(stim_token,'_');
+            if ~isempty(parts_us)
+                B.stim_index{it} = parts_us{1};   % e.g. 'cat668'
+            else
+                B.stim_index{it} = stim_token;
+            end
+        else
+            B.stim_index{it} = '';
+        end
     else
-        B.stim_name{it} = '';
+        B.stim_name{it}  = '';
+        B.stim_index{it} = '';
     end
     
-    % PostStimSilence
-    q_idx = find(strncmp(notes,'PostStimSilence',15));
-    if ~isempty(q_idx)
-        B.t_post_start(it) = starts(q_idx(1));
-        B.t_post_stop(it)  = stops(q_idx(1));
-    end
+%     % PostStimSilence
+%     q_idx = find(strncmp(notes,'PostStimSilence',15));
+%     if ~isempty(q_idx)
+%         B.t_post_start(it) = starts(q_idx(1));
+%         B.t_post_stop(it)  = stops(q_idx(1));
+%     end
     
     % category
     nm = B.stim_name{it};
-    if isempty(nm)
+    idx_str = B.stim_index{it};
+    
+    if isempty(nm) && isempty(idx_str)
         B.category{it} = 'unknown';
         continue;
     end
     
-    if contains(nm,'Silence')
-        B.is_silence(it) = 1;
-        B.category{it}   = 'silence';
-        continue;
+%     % silence first
+%     if (~isempty(nm)      && contains(nm,'Silence')) || ...
+%        (~isempty(idx_str) && contains(idx_str,'Silence'))
+%         B.is_silence(it) = 1;
+%         B.category{it}   = 'silence';
+%         B.cat_id(it)     = NaN;
+%         continue;
+%     end
+    
+    % Try to get cat_id from stim_index (hint-style)
+    cid = NaN;
+    if ~isempty(idx_str)
+        tok = regexp(idx_str,'cat(\d+)','tokens');
+        if ~isempty(tok)
+            cid = str2double(tok{1}{1});
+        end
     end
     
-    % look for "catXXX" pattern
-    tok = regexp(nm,'cat(\d+)','tokens');
-    if ~isempty(tok)
-        cid = str2double(tok{1}{1});
+    % fallback to old stim_name-based extraction if stim_index failed
+    if isnan(cid) && ~isempty(nm)
+        tok2 = regexp(nm,'cat(\d+)','tokens');
+        if ~isempty(tok2)
+            cid = str2double(tok2{1}{1});
+        end
+    end
+    
+    if ~isnan(cid)
         B.cat_id(it) = cid;
         
+        % same mapping rule as before
         if cid == 668
             B.category{it} = 'ferret';
         elseif cid < 668
@@ -124,7 +173,6 @@ for it = 1:n_trials
             B.category{it} = 'speech';
         end
     else
-        % fallback: use the snippet you mentioned if "catNNN" is not there
         B.cat_id(it)   = NaN;
         B.category{it} = 'unknown';
     end
@@ -137,9 +185,8 @@ B.category = B.category(:);
 n_music  = sum(strcmp(B.category,'music'));
 n_speech = sum(strcmp(B.category,'speech'));
 n_ferret = sum(strcmp(B.category,'ferret'));
-n_sil    = sum(B.is_silence);
+% n_sil    = sum(B.is_silence);
 
-disp(sprintf('[RP_parse_baphy_passive] Trials: %d (music=%d, speech=%d, ferret=%d, silence=%d)', ...
-    n_trials, n_music, n_speech, n_ferret, n_sil));
-
+disp(sprintf('[RP_parse_baphy_passive] Trials: %d (music=%d, speech=%d, ferret=%d)', ...
+    n_trials, n_music, n_speech, n_ferret));
 end

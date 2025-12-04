@@ -24,8 +24,8 @@ E = struct;
 %% 1) fUS blocks from fUS TTLs (if present)
 
 if isfield(trigOE,'fus')
-    if isfield(trigOE.fus,'t_reg_s') && ~isempty(trigOE.fus.t_reg_s)
-        t_fus = trigOE.fus.t_reg_s(:);
+    if isfield(trigOE.fus,'t_s') && ~isempty(trigOE.fus.t_s)
+        t_fus = trigOE.fus.t_s(:);
     else
         t_fus = trigOE.fus.t_raw_s(:);
     end
@@ -52,7 +52,7 @@ if isfield(trigOE,'fus')
         blk_starts = blk_starts - pad;
         blk_ends   = blk_ends   + pad;
         
-        E.fus_blocks = intervalSet(blk_starts, blk_ends);
+        E.fus_blocks = intervalSet(blk_starts*1e4, blk_ends*1e4);
         fprintf('  fUS blocks: %d blocks from %.2f to %.2f s\n', ...
             length(blk_starts), blk_starts(1), blk_ends(end));
     else
@@ -68,7 +68,12 @@ if ~isfield(trigOE,'baphy')
     error('[RP_build_epochs_passive] trigOE.baphy missing (no Baphy TTL channel).');
 end
 
-t_trial_onset = trigOE.baphy.t_raw_s(:);   % OE TTL times in seconds
+if isfield(trigOE.baphy,'t_s') && ~isempty(trigOE.baphy.t_s)
+    t_trial_onset = trigOE.baphy.t_s(:);
+else
+    t_trial_onset = trigOE.baphy.t_raw_s(:); 
+end
+
 n_oe = numel(t_trial_onset);
 n_b = B.n_trials;
 
@@ -82,42 +87,17 @@ else
     n = n_b;
 end
 
-trial_start_s = nan(n,1);
-trial_end_s   = nan(n,1);
 stim_start_s  = nan(n,1);
 stim_end_s    = nan(n,1);
 
+trial_start_s = trigOE.baphy.trial_start_ts/1e4;
+trial_end_s = trigOE.baphy.trial_stop_ts/1e4;
+
 for it = 1:n
     t0 = t_trial_onset(it);    % OE time when trial starts
-    
-    % durations from Baphy (relative to trial)
-    t_pre_start  = B.t_pre_start(it);   % usually 0
-    t_pre_stop   = B.t_pre_stop(it);
-    t_stim_start = B.t_stim_start(it);
-    t_stim_stop  = B.t_stim_stop(it);
-    t_post_stop  = B.t_post_stop(it);
-    
-    % define trial start/end: from PreStimSilence start to PostStimSilence stop
-    if ~isnan(t_pre_start)
-        trial_start_s(it) = t0 + t_pre_start;
-    else
-        trial_start_s(it) = t0;  % fallback
-    end
-    
-    if ~isnan(t_post_stop)
-        trial_end_s(it) = t0 + t_post_stop;
-    elseif ~isnan(t_stim_stop)
-        trial_end_s(it) = t0 + t_stim_stop;
-    else
-        % fallback: 5 s trial if all else fails
-        trial_end_s(it) = t0 + 5;
-    end
-    
     % stimulus epoch
-    if ~isnan(t_stim_start) && ~isnan(t_stim_stop)
-        stim_start_s(it) = t0 + t_stim_start;
-        stim_end_s(it)   = t0 + t_stim_stop;
-    end
+    stim_start_s(it) = t0 + B.t_stim_start(it);
+    stim_end_s(it)   = t0 + B.t_stim_stop(it);
 end
 
 % drop any NaNs
@@ -131,7 +111,7 @@ if any(bad)
     B.category(bad)    = [];
 end
 
-E.trial_all = intervalSet(trial_start_s, trial_end_s);
+E.trial_all = intervalSet(trial_start_s*1e4, trial_end_s*1e4);
 
 %% 3) Category-specific trial and stim epochs
 
@@ -141,24 +121,33 @@ n_trials = numel(cat);
 idx_music  = strcmp(cat,'music');
 idx_speech = strcmp(cat,'speech');
 idx_ferret = strcmp(cat,'ferret');
-idx_sil    = strcmp(cat,'silence');
 
-E.trial_music  = intervalSet(trial_start_s(idx_music),  trial_end_s(idx_music));
-E.trial_speech = intervalSet(trial_start_s(idx_speech), trial_end_s(idx_speech));
-E.trial_ferret = intervalSet(trial_start_s(idx_ferret), trial_end_s(idx_ferret));
-E.trial_silence= intervalSet(trial_start_s(idx_sil),    trial_end_s(idx_sil));
+if ~isempty(trial_start_s(idx_music))
+    E.trial_music  = intervalSet(trial_start_s(idx_music)*1e4,  trial_end_s(idx_music)*1e4);
+end
+if ~isempty(trial_start_s(idx_speech))
+    E.trial_speech = intervalSet(trial_start_s(idx_speech)*1e4, trial_end_s(idx_speech)*1e4);
+end
+if ~isempty(trial_start_s(idx_ferret))
+    E.trial_ferret = intervalSet(trial_start_s(idx_ferret)*1e4, trial_end_s(idx_ferret)*1e4);
+end
 
 % Stim epochs (only where defined)
 good_stim = ~isnan(stim_start_s) & ~isnan(stim_end_s);
-E.stim_all = intervalSet(stim_start_s(good_stim), stim_end_s(good_stim));
+E.stim_all = intervalSet(stim_start_s(good_stim)*1e4, stim_end_s(good_stim)*1e4);
 
-E.stim_music  = intervalSet(stim_start_s(idx_music  & good_stim), stim_end_s(idx_music  & good_stim));
-E.stim_speech = intervalSet(stim_start_s(idx_speech & good_stim), stim_end_s(idx_speech & good_stim));
-E.stim_ferret = intervalSet(stim_start_s(idx_ferret & good_stim), stim_end_s(idx_ferret & good_stim));
-E.stim_silence= intervalSet(stim_start_s(idx_sil    & good_stim), stim_end_s(idx_sil    & good_stim));
+if ~isempty(trial_start_s(idx_music))
+    E.stim_music  = intervalSet(stim_start_s(idx_music  & good_stim)*1e4, stim_end_s(idx_music  & good_stim)*1e4);
+end
+if ~isempty(trial_start_s(idx_speech))
+    E.stim_speech = intervalSet(stim_start_s(idx_speech & good_stim)*1e4, stim_end_s(idx_speech & good_stim)*1e4);
+end
+if ~isempty(trial_start_s(idx_ferret))
+    E.stim_ferret = intervalSet(stim_start_s(idx_ferret & good_stim)*1e4, stim_end_s(idx_ferret & good_stim)*1e4);
+end
 
-fprintf('  Trials kept: %d (music=%d, speech=%d, ferret=%d, silence=%d)\n', ...
-    n_trials, sum(idx_music), sum(idx_speech), sum(idx_ferret), sum(idx_sil));
+fprintf('  Trials kept: %d (music=%d, speech=%d, ferret=%d)\n', ...
+    n_trials, sum(idx_music), sum(idx_speech), sum(idx_ferret));
 
 % quick sanity plot if you want
 do_plot = 0;
@@ -168,22 +157,28 @@ if do_plot
     plot(trial_start_s, ones(size(trial_start_s)),'k.');
     hold on;
     plot(stim_start_s, 1.1*ones(size(stim_start_s)),'r.');
-    xlabel('Time (s)'); ylim([0.9 1.2]);
+    xlabel('Time (s)'); ylim([0 2]); legend({'trial onset'; 'stim onset'})
     title('Trial and stim onsets');
     
     subplot(3,1,2);
-    stairs(trial_start_s, strcmp(cat,'music'),'b'); hold on;
-    stairs(trial_start_s, strcmp(cat,'speech'),'r');
-    stairs(trial_start_s, strcmp(cat,'ferret'),'g');
-    legend({'music','speech','ferret'});
+    if ~isempty(trial_start_s(idx_music))
+        plot(trial_start_s(strcmp(cat,'music')), 1 ,'b*'); hold on;
+    end
+    if ~isempty(trial_start_s(idx_speech))
+        
+        plot(trial_start_s(strcmp(cat,'speech')),1, 'r*');
+    end
+    if ~isempty(trial_start_s(idx_ferret))
+        plot(trial_start_s(strcmp(cat,'ferret')),1, 'g*');
+    end
+%     legend({'music','speech','ferret'});
     ylabel('category');
     
     if isfield(E,'fus_blocks')
-        subplot(3,1,3);
-        starts = Start(E.fus_blocks,'s');
-        ends   = End(E.fus_blocks,'s');
+        starts = Start(E.fus_blocks, 's');
+        ends   = End(E.fus_blocks, 's');
         for i = 1:numel(starts)
-            patch([starts(i) ends(i) ends(i) starts(i)], [0 0 1 1], 'c', 'FaceAlpha',0.3,'EdgeColor','none');
+            patch([starts(i) ends(i) ends(i) starts(i)], [0 0 1 1], 'k', 'FaceAlpha',0.1,'EdgeColor','none');
             hold on;
         end
         xlabel('Time (s)');
