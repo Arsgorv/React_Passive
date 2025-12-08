@@ -80,7 +80,7 @@ for sess = 1:numel(sessions)
                     && ~isempty(trigOE.fus.t_s)
                 figure('Name',['OE fUS raw vs regularised TTLs - ' datapath],'NumberTitle','off');
                 hold on 
-                plot(trigOE.fus.t_s, 1, 'r*');
+                plot(trigOE.fus.t_s, 1.1, 'r*');
                 plot(trigOE.fus.t_raw_ts/1e4, 1, 'b*');
                 plot(trigOE.fus.t_s(find(ismember(trigOE.fus.t_s, trigOE.fus.t_raw_ts/1e4)==0)), 0.99, 'g*');
                 xlabel('Time (s)'); ylim([0 2]);

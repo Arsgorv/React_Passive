@@ -48,11 +48,12 @@ Notes:
 
 %% Select sessions
 % Form the list of sessions
-selection = 3;
+selection = 4;
 
 Dir{1} = PathForExperimentsReactPassive('Chabichou', 'all', 'all', 'all');
 Dir{2} = PathForExperimentsReactPassive('Edel', 'all', 'all', 'all');
 Dir{3} = PathForExperimentsReactPassive('Kosichka', 'all', 'all', 'all');
+Dir{4} = MergePathForExperiment(Dir{1}, Dir{2});
 
 sessions = Dir{selection}.path';
 

@@ -150,7 +150,7 @@ fprintf('  Trials kept: %d (music=%d, speech=%d, ferret=%d)\n', ...
     n_trials, sum(idx_music), sum(idx_speech), sum(idx_ferret));
 
 % quick sanity plot if you want
-do_plot = 0;
+do_plot = 1;
 if do_plot
     figure('Color','w');
     subplot(3,1,1);
