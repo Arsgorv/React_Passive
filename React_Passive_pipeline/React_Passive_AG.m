@@ -65,11 +65,12 @@ Master_fUS_preproc(sessions)
 
 %% PreProcessing: align all datastreams -> extract trial information -> reconstruct missed triggers -> make Epochs
 Master_data_sync_preproc(sessions, true)
+% check_datasync(datapath)
 
 %% PreProcessing: Behaviour (pupil ; baphy)
 % React_Passive_epoch_preprocessing
 % Master_behaviour_preproc(sessions)
-
+[motion_tsd, t, motion_energy, roi_rect, info] = motion_energy(datapath)
 
 
 

@@ -6,7 +6,8 @@ function E = RP_build_epochs_passive(datapath, trigOE, B)
 %   - Baphy m-file parsed by RP_parse_baphy_passive (B)
 %
 % OUTPUT E struct:
-%   E.fus_blocks            : intervalSet of continuous fUS imaging blocks
+%   E.fus_preexp / fus_exp / fus_postexp : fUS imaging blocks (ts units)
+%   E.fus_blocks                         : union of all fUS blocks
 %
 %   E.trial_all             : intervalSet of all trials
 %   E.trial_music/speech/ferret/silence : category-specific trial sets
@@ -14,52 +15,117 @@ function E = RP_build_epochs_passive(datapath, trigOE, B)
 %   E.stim_all              : intervalSet of all stimulus epochs
 %   E.stim_music/speech/ferret/silence  : category-specific stim sets
 %
-% All times are in seconds on the OE/ephys timeline.
-
+% All times are in seconds on the OE/ephys timeline, converted to ts (1e4).
+        
 [~, sess_name] = fileparts(datapath);
 disp(['[RP_build_epochs_passive] Session: ' sess_name]);
 
 E = struct;
 
-%% 1) fUS blocks from fUS TTLs (if present)
+E.fus_preexp  = intervalSet([],[]);
+E.fus_exp     = intervalSet([],[]);
+E.fus_postexp = intervalSet([],[]);
+E.fus_blocks  = intervalSet([],[]);
 
-if isfield(trigOE,'fus')
+%% 1) fUS blocks from OE TTLs (if present)
+
+have_fus = isfield(trigOE,'fus') && ...
+    ( (isfield(trigOE.fus,'t_s')     && ~isempty(trigOE.fus.t_s)) || ...
+      (isfield(trigOE.fus,'t_raw_s') && ~isempty(trigOE.fus.t_raw_s)) );
+
+if have_fus
     if isfield(trigOE.fus,'t_s') && ~isempty(trigOE.fus.t_s)
         t_fus = trigOE.fus.t_s(:);
     else
         t_fus = trigOE.fus.t_raw_s(:);
     end
-    
+    t_fus = sort(t_fus(:));
+
     if numel(t_fus) >= 2
-        iti = diff(t_fus);
-        medITI = median(iti);
-        gap_thr = 1.5 * medITI;   % gap > gap_thr => pause between imaging blocks
+        dt = diff(t_fus);
+        medITI = median(dt);
         
-        gap_idx = find(iti > gap_thr);
-        
-        blk_start = t_fus(1);
-        blk_starts = blk_start;
-        blk_ends   = [];
-        
-        for g = 1:numel(gap_idx)
-            blk_ends(end+1,1)   = t_fus(gap_idx(g));      % end at last pulse before gap
-            blk_starts(end+1,1) = t_fus(gap_idx(g)+1);    % start at first pulse after gap
+        phase_gap_thr =  1.5 * medITI; % seconds
+        gap_idx = find(dt > phase_gap_thr);
+        seg_start = [1; gap_idx + 1];
+        seg_end   = [gap_idx; numel(t_fus)];
+        n_seg = numel(seg_start);
+
+        % try to assign 3 segments: PreExp, Exp, PostExp
+        if n_seg >= 3
+            idx_pre  = seg_start(1):seg_end(1);
+            idx_exp  = seg_start(2):seg_end(2);
+            idx_post = seg_start(3):seg_end(3);
+
+            t_pre_start  = t_fus(idx_pre(1));
+            t_pre_end    = t_fus(idx_pre(end));
+            t_exp_start  = t_fus(idx_exp(1));
+            t_exp_end    = t_fus(idx_exp(end));
+            t_post_start = t_fus(idx_post(1));
+            t_post_end   = t_fus(idx_post(end));
+
+            E.fus_preexp  = intervalSet(t_pre_start*1e4,  t_pre_end*1e4);
+            E.fus_exp     = intervalSet(t_exp_start*1e4,  t_exp_end*1e4);
+            E.fus_postexp = intervalSet(t_post_start*1e4, t_post_end*1e4);
+            E.fus_blocks  = union(E.fus_preexp, union(E.fus_exp, E.fus_postexp));
+
+            fprintf('  fUS blocks (OE): PreExp[%.2f–%.2f], Exp[%.2f–%.2f], PostExp[%.2f–%.2f] s\n', ...
+                t_pre_start, t_pre_end, t_exp_start, t_exp_end, t_post_start, t_post_end);
+
+            % optional: check counts against exp_info
+            fus_dir  = fullfile(datapath,'fUS');
+            exp_file = fullfile(fus_dir,'exp_info.mat');
+            if exist(exp_file,'file')
+                try
+                    S = load(exp_file);
+                    exp_info = S.exp_info;
+                    if isfield(exp_info,'PreExp')
+                        n_pre_exp  = exp_info.PreExp.size(3);
+                        n_exp      = exp_info.Exp.size(3);
+                        n_post_exp = exp_info.PostExp.size(3);
+                    elseif isfield(exp_info,'size')
+                        n_pre_exp  = exp_info.size{1}(3);
+                        n_exp      = exp_info.size{2}(3);
+                        n_post_exp = exp_info.size{3}(3);
+                    else
+                        n_pre_exp = []; n_exp = []; n_post_exp = [];
+                    end
+
+                    n_pre_ttl  = numel(idx_pre);
+                    n_exp_ttl  = numel(idx_exp);
+                    n_post_ttl = numel(idx_post);
+
+                    if ~isempty(n_pre_exp) && n_pre_ttl ~= n_pre_exp
+                        warning('[OE-fUS] PreExp frames mismatch in %s: TTL=%d, fUS=%d', ...
+                            datapath, n_pre_ttl, n_pre_exp);
+                    end
+                    if ~isempty(n_exp) && n_exp_ttl ~= n_exp
+                        warning('[OE-fUS] Exp frames mismatch in %s: TTL=%d, fUS=%d', ...
+                            datapath, n_exp_ttl, n_exp);
+                    end
+                    if ~isempty(n_post_exp) && n_post_ttl ~= n_post_exp
+                        warning('[OE-fUS] PostExp frames mismatch in %s: TTL=%d, fUS=%d', ...
+                            datapath, n_post_ttl, n_post_exp);
+                    end
+                catch ME
+                    warning('[OE-fUS] exp_info frame check failed in %s: %s', datapath, ME.message);
+                end
+            end
+
+        else
+            warning('[RP_build_epochs_passive] Could not detect 3 fUS blocks from OE TTLs (n_seg=%d).', n_seg);
+            % We at least define a single fUS block spanning all TTLs
+            t_start = t_fus(1);
+            t_end   = t_fus(end);
+            E.fus_exp    = intervalSet(t_start*1e4, t_end*1e4);
+            E.fus_blocks = E.fus_exp;
         end
-        blk_ends(end+1,1) = t_fus(end);
-        
-        % small padding around blocks
-        pad = 0.5 * medITI;
-        blk_starts = blk_starts - pad;
-        blk_ends   = blk_ends   + pad;
-        
-        E.fus_blocks = intervalSet(blk_starts*1e4, blk_ends*1e4);
-        fprintf('  fUS blocks: %d blocks from %.2f to %.2f s\n', ...
-            length(blk_starts), blk_starts(1), blk_ends(end));
+
     else
         warning('[RP_build_epochs_passive] Not enough fUS TTLs to define blocks.');
     end
 else
-    warning('[RP_build_epochs_passive] No trigOE.fus field; skipping fUS blocks.');
+    warning('[RP_build_epochs_passive] No fUS TTLs in trigOE; fUS epochs must come from csv/data for this session.');
 end
 
 %% 2) Trial epochs from Baphy + Baphy TTLs
