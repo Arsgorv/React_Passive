@@ -79,23 +79,38 @@ data = {
     'Edel', 'second', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220418_2_n_B', '20220421_2_n_E', '20220517_2_n_S'};
 
     % Kosichka
-    'Kosichka', 'first', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'first', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'first', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251120_1_m_p06'};
+    'Kosichka', 'first', 'morning', 'ferret-music', basePaths.Kosichka, {};
+    'Kosichka', 'first', 'morning', 'music-speech', basePaths.Kosichka, {'20251128_1_m_p14'};
+    'Kosichka', 'first', 'morning', 'ferret-speech', basePaths.Kosichka, {'20251120_1_m_p06'};
     
-    'Kosichka', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251117_1_n_p19'};
-    'Kosichka', 'first', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251114_1_n_p05'};
-    'Kosichka', 'first', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
+    'Kosichka', 'first', 'evening', 'ferret-music', basePaths.Kosichka, {'20251117_1_n_p19', '20251124_1_n_p10', '20251215_1_n_p04'};
+    'Kosichka', 'first', 'evening', 'music-speech', basePaths.Kosichka, {'20251114_1_n_p05', '20251208_1_n_p20'};
+    'Kosichka', 'first', 'evening', 'ferret-speech', basePaths.Kosichka, {'20251201_1_n_p15'};
     
-    'Kosichka', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'second', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251121_2_m_p06'};
+    'Kosichka', 'second', 'morning', 'ferret-music', basePaths.Kosichka, {};
+    'Kosichka', 'second', 'morning', 'music-speech', basePaths.Kosichka, {};
+    'Kosichka', 'second', 'morning', 'ferret-speech', basePaths.Kosichka, {'20251121_2_m_p06'};
     
-    'Kosichka', 'second', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {'20251118_2_n_p19'};
-    'Kosichka', 'second', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-    'Kosichka', 'second', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
-
+    'Kosichka', 'second', 'evening', 'ferret-music', basePaths.Kosichka, {'20251118_2_n_p19', '20251125_2_n_p10'};
+    'Kosichka', 'second', 'evening', 'music-speech', basePaths.Kosichka, {'20251208_1_n_p20'};
+    'Kosichka', 'second', 'evening', 'ferret-speech', basePaths.Kosichka, {'20251202_2_n_p15'};
+    
     % Ficello
+    'Ficello', 'first', 'morning', 'ferret-music', basePaths.Ficello, {'20251212_1_m_p10', '20260105_1_m_p04'};
+    'Ficello', 'first', 'morning', 'music-speech', basePaths.Ficello, {'20251204_1_m_p05'};
+    'Ficello', 'first', 'morning', 'ferret-speech', basePaths.Ficello, {'20251215_1_m_p06', '20260128_1_m_p13'};
+    
+    'Ficello', 'first', 'evening', 'ferret-music', basePaths.Ficello, {'20260119_1_n_p19'};
+    'Ficello', 'first', 'evening', 'music-speech', basePaths.Ficello, {'20260107_1_n_p20', '20260112_1_n_p14', '20260122_1_n_p8'};
+    'Ficello', 'first', 'evening', 'ferret-speech', basePaths.Ficello, {'20260109_1_n_p15', '20260114_1_n_p28'};
+    
+    'Ficello', 'second', 'morning', 'ferret-music', basePaths.Ficello, {'20260121_2_m_p19'};
+    'Ficello', 'second', 'morning', 'music-speech', basePaths.Ficello, {'20251205_2_m_p05', '20260113_2_m_p14'};
+    'Ficello', 'second', 'morning', 'ferret-speech', basePaths.Ficello, {'20251216_2_m_p06'};
+    
+    'Ficello', 'second', 'evening', 'ferret-music', basePaths.Ficello, {'20260106_2_n_p04'};
+    'Ficello', 'second', 'evening', 'music-speech', basePaths.Ficello, {'20260108_2_n_p20', '20260123_2_n_p8'};
+    'Ficello', 'second', 'evening', 'ferret-speech', basePaths.Ficello, {'20260115_2_n_p28'};
     
     % Kiri
     };
