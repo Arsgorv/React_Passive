@@ -1,6 +1,4 @@
-
 function React_Passive_AG
-%(slot_code, slice, comp, preprocessing)
 %{
 %
 % Data created here can be used for figures in other script ALLFIGs.m
@@ -47,13 +45,17 @@ Notes:
 %}
 
 %% Select sessions
+project = 'RP'; % 'RA' 'Tonotopy'
+
 % Form the list of sessions
 selection = 4;
 
 Dir{1} = PathForExperimentsReactPassive('Chabichou', 'all', 'all', 'all');
 Dir{2} = PathForExperimentsReactPassive('Edel', 'all', 'all', 'all');
 Dir{3} = PathForExperimentsReactPassive('Kosichka', 'all', 'all', 'all');
-Dir{4} = MergePathForExperiment(Dir{1}, Dir{2});
+Dir{4} = PathForExperimentsReactPassive('Ficello', 'all', 'all', 'all');
+
+Dir{5} = MergePathForExperiment(Dir{1}, Dir{2});
 
 sessions = Dir{selection}.path';
 
@@ -63,17 +65,28 @@ Master_SleepScoring_preproc(sessions)
 %% PreProcessing: fUS
 Master_fUS_preproc(sessions)
 
+%% PreProcessing: Behaviour 
+% Move DLC videos 
+to_dir = 'Z:\Arsenii\React_Active\experiment\Tvorozhok'; 
+from_dir = 'E:\DLC';
+copy_dlc_related_files(to_dir, from_dir)
+
+Master_DLC_preproc(sessions, opts)
+
 %% PreProcessing: align all datastreams -> extract trial information -> reconstruct missed triggers -> make Epochs
-Master_data_sync_preproc(sessions, true)
-% check_datasync(datapath)
+Master_data_sync_preproc(sessions, true, project)
 
-%% PreProcessing: Behaviour (pupil ; baphy)
-% React_Passive_epoch_preprocessing
-% Master_behaviour_preproc(sessions)
-[motion_tsd, t, motion_energy, roi_rect, info] = motion_energy(datapath)
-
-
-
+% Check data sync
+for sess = 1:numel(sessions)
+    datapath = sessions{sess};
+    disp('------------------------------------------')
+    disp(['Working on ' datapath])
+    if contains(project, 'RA')
+        QC = RA_sanity_check_datasync_active(datapath);
+    elseif contains(project, 'RP')
+        QC = RP_sanity_check_datasync_passive(datapath);
+    end
+end
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 

@@ -95,6 +95,9 @@ data = {
     'Kosichka', 'second', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
     'Kosichka', 'second', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Kosichka', {};
 
+    % Ficello
+    
+    % Kiri
     };
 
 % Filter sessions based on inputs
