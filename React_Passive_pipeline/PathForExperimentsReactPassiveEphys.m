@@ -48,13 +48,13 @@ data = {
     'Ficello', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Ficello', {'20251215'};
 
     % Kiri
-    'Kiri', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251211', '20251218', '20251229', '20260113', '20260123'};
+    'Kiri', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251218', '20251229', '20260113', '20260123'}; %'20251211'
     'Kiri', 'first', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251216_m', '20251224', '20260109', '20260121'};
-    'Kiri', 'first', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251213', '20251222', '20251231', '20260115', '20260129'};
+    'Kiri', 'first', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251222', '20251231', '20260115', '20260129'}; %'20251213'
 
-    'Kiri', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251212', '20251219', '20251230', '20260114', '20260128'};
+    'Kiri', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251219', '20251230', '20260114', '20260128'}; %'20251212'
     'Kiri', 'second', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251216_n', '20251226', '20260112', '20260122'};
-    'Kiri', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251215', '20251223', '20260102', '20260116'};
+    'Kiri', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive_ephys\Processed_data\Kiri', {'20251223', '20260102', '20260116'}; %'20251215'
 };
 
 % Filter sessions based on inputs
