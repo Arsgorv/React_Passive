@@ -1,5 +1,5 @@
 function E = RP_build_epochs_tonotopy(datapath, trigOE, B)
-% RP_build_epochs_passive
+% RP_build_epochs_tonotopy
 % Build intervalSet epochs for Tonotopy session
 % using:
 %   - OE TTLs: trigOE.baphy (trial onsets), trigOE.fus (fUS TTLs)

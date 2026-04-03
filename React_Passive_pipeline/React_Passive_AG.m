@@ -45,7 +45,7 @@ Notes:
 %}
 
 %% Select sessions
-project = 'RP'; % 'RA' 'Tonotopy'
+project = 'RP'; % 'RA' 'Tonotopy', 'Arousal', 'RP'
 
 % Form the list of sessions
 selection = 4;
@@ -75,7 +75,7 @@ Master_DLC_preproc(sessions, opts)
 
 %% PreProcessing: align all datastreams -> extract trial information -> reconstruct missed triggers -> make Epochs
 Master_data_sync_preproc(sessions, true, project)
-
+%%
 % Check data sync
 for sess = 1:numel(sessions)
     datapath = sessions{sess};
@@ -84,7 +84,7 @@ for sess = 1:numel(sessions)
     if contains(project, 'RA')
         QC = RA_sanity_check_datasync_active(datapath);
     elseif contains(project, 'RP')
-        QC = RP_sanity_check_datasync_passive(datapath);
+        RP_sanity_check_datasync_passive(datapath);
     end
 end
 

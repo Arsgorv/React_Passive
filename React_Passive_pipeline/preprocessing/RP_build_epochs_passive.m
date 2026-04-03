@@ -45,7 +45,7 @@ if have_fus
         dt = diff(t_fus);
         medITI = median(dt);
         
-        phase_gap_thr =  1.5 * medITI; % seconds
+        phase_gap_thr =  15 * medITI; % seconds
         gap_idx = find(dt > phase_gap_thr);
         seg_start = [1; gap_idx + 1];
         seg_end   = [gap_idx; numel(t_fus)];
@@ -69,7 +69,7 @@ if have_fus
             E.fus_postexp = intervalSet(t_post_start*1e4, t_post_end*1e4);
             E.fus_blocks  = union(E.fus_preexp, union(E.fus_exp, E.fus_postexp));
 
-            fprintf('  fUS blocks (OE): PreExp[%.2f–%.2f], Exp[%.2f–%.2f], PostExp[%.2f–%.2f] s\n', ...
+            fprintf('  fUS blocks (OE): PreExp[%.2f, %.2f], Exp[%.2f, %.2f], PostExp[%.2f, %.2f] s\n', ...
                 t_pre_start, t_pre_end, t_exp_start, t_exp_end, t_post_start, t_post_end);
 
             % optional: check counts against exp_info
@@ -98,14 +98,30 @@ if have_fus
                     if ~isempty(n_pre_exp) && n_pre_ttl ~= n_pre_exp
                         warning('[OE-fUS] PreExp frames mismatch in %s: TTL=%d, fUS=%d', ...
                             datapath, n_pre_ttl, n_pre_exp);
+                        if n_pre_exp < n_pre_ttl
+                            TriggersToRemove = n_pre_exp+1:n_pre_ttl;
+                            t_fus(TriggersToRemove)=[];
+                        end
+                        
+                        
                     end
                     if ~isempty(n_exp) && n_exp_ttl ~= n_exp
                         warning('[OE-fUS] Exp frames mismatch in %s: TTL=%d, fUS=%d', ...
                             datapath, n_exp_ttl, n_exp);
+                        
+                        if n_exp < n_exp_ttl
+                            TriggersToRemove = n_pre_exp + n_exp +1: n_pre_exp + n_exp_ttl;
+                            t_fus(TriggersToRemove)=[];
+                        end
                     end
                     if ~isempty(n_post_exp) && n_post_ttl ~= n_post_exp
                         warning('[OE-fUS] PostExp frames mismatch in %s: TTL=%d, fUS=%d', ...
                             datapath, n_post_ttl, n_post_exp);
+                         
+                          if n_post_exp < n_post_ttl
+                            TriggersToRemove = n_pre_exp + n_exp + n_post_exp +1: n_pre_exp + n_exp + n_post_ttl;
+                            t_fus(TriggersToRemove)=[];
+                        end
                     end
                 catch ME
                     warning('[OE-fUS] exp_info frame check failed in %s: %s', datapath, ME.message);
@@ -124,6 +140,18 @@ if have_fus
     else
         warning('[RP_build_epochs_passive] Not enough fUS TTLs to define blocks.');
     end
+    
+    Slices={'A', 'B', 'C', 'D'};
+    for iSlice = 1:length(Slices)
+        fus_file = dir(strcat(datapath, '/fUS/RP_data_*slice_', Slices{iSlice}, '.mat'));
+        load(fullfile(datapath, 'fUS', fus_file.name))
+        if length(t_fus) == length(Range(cat_tsd.data))
+            cat_tsd_new = tsd(t_fus*10000, Data(cat_tsd.data));  
+            cat_tsd.data = cat_tsd_new; 
+            save(fullfile(datapath, 'fUS', fus_file.name), 'cat_tsd', '-append')
+        end
+    end
+    
 else
     warning('[RP_build_epochs_passive] No fUS TTLs in trigOE; fUS epochs must come from csv/data for this session.');
 end
