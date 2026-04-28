@@ -118,7 +118,7 @@ if have_fus
     Slices={'A', 'B', 'C', 'D'};
     for iSlice = 1:length(Slices)
         fus_file = dir(strcat(datapath, '/fUS/RP_data_*slice_', Slices{iSlice}, '.mat'));
-        load(fullfile(datapath, 'fUS', fus_file.name))
+        load(fullfile(datapath, 'fUS', fus_file.name), 'cat_tsd')
         if length(t_fus) == length(Range(cat_tsd.data))
             cat_tsd_new = tsd(t_fus*10000, Data(cat_tsd.data));  
             cat_tsd.data = cat_tsd_new; 

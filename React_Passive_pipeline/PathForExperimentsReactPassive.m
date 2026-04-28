@@ -42,50 +42,65 @@ Dir.path = {};
 Dir.ExpeInfo = {};
 Dir.name = {};
 
+% basePath according to OS (windows or Linux)
+if ispc
+    basePaths.Chabichou = 'Z:\Arsenii\React_Passive\Processed_data\Chabichou';
+    basePaths.Edel      = 'Z:\Arsenii\React_Passive\Processed_data\Edel';
+    basePaths.Kosichka  = 'Z:\Arsenii\React_Passive\Processed_data\Kosichka';
+    basePaths.Ficello  = 'Z:\Arsenii\React_Passive\Processed_data\Kosichka';
+elseif isunix
+    basePaths.Chabichou = '/home/arsenii/data5/Arsenii/React_Passive/Processed_data/Chabichou';
+    basePaths.Edel      = '/home/arsenii/data5/Arsenii/React_Passive/Processed_data/Edel';
+    basePaths.Kosichka  = '/home/arsenii/data5/Arsenii/React_Passive/Processed_data/Kosichka';
+    basePaths.Ficello  = '/home/arsenii/data5/Arsenii/React_Passive/Processed_data/Ficello';
+else
+    error('Adjust Data paths');
+end
+
 % Session data (add paths and session names)
 data = {
     % Chabichou
-    'Chabichou', 'first', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210329_1_m_C', '20210401_1_m_E', '20210408_1_m_H', '20210427_1_m_O', '20210429_1_m_Q', '20210505_1_m_S'};
-    'Chabichou', 'first', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210406_1_m_F', '20210413_1_m_I', '20210420_1_m_L', '20210422_1_m_N', '20210504_1_m_R', '20210512_1_m_U'};
-    'Chabichou', 'first', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210331_1_m_D', '20210407_1_m_G', '20210415_1_m_K', '20210421_1_m_M', '20210428_1_m_P', '20210511_1_m_T'};
+    'Chabichou', 'first', 'morning', 'ferret-music', basePaths.Chabichou, {'20210329_1_m_C', '20210401_1_m_E', '20210408_1_m_H', '20210427_1_m_O', '20210429_1_m_Q', '20210505_1_m_S'};
+    'Chabichou', 'first', 'morning', 'music-speech', basePaths.Chabichou, {'20210406_1_m_F', '20210413_1_m_I', '20210420_1_m_L', '20210422_1_m_N', '20210504_1_m_R', '20210512_1_m_U'};
+    'Chabichou', 'first', 'morning', 'ferret-speech', basePaths.Chabichou, {'20210331_1_m_D', '20210407_1_m_G', '20210415_1_m_K', '20210421_1_m_M', '20210428_1_m_P', '20210511_1_m_T'};
     
-    'Chabichou', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210414_1_n_J'};
-    'Chabichou', 'first', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {};
-    'Chabichou', 'first', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {};
+    'Chabichou', 'first', 'evening', 'ferret-music', basePaths.Chabichou, {'20210414_1_n_J'};
+    'Chabichou', 'first', 'evening', 'music-speech', basePaths.Chabichou, {};
+    'Chabichou', 'first', 'evening', 'ferret-speech', basePaths.Chabichou, {};
     
-    'Chabichou', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {};
-    'Chabichou', 'second', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210414_2_m_I'};
-    'Chabichou', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {};
+    'Chabichou', 'second', 'morning', 'ferret-music', basePaths.Chabichou, {};
+    'Chabichou', 'second', 'morning', 'music-speech', basePaths.Chabichou, {'20210414_2_m_I'};
+    'Chabichou', 'second', 'morning', 'ferret-speech', basePaths.Chabichou, {};
     
-    'Chabichou', 'second', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210330_2_n_C', '20210406_2_n_E', '20210409_2_n_H', '20210415_2_n_J', '20210427_2_n_O', '20210429_2_n_Q', '20210505_2_n_S'};
-    'Chabichou', 'second', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210407_2_n_F', '20210420_2_n_L', '20210422_2_n_N', '20210504_2_n_R', '20210512_2_n_U'};
-    'Chabichou', 'second', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Chabichou', {'20210401_2_n_D', '20210408_2_n_G', '20210416_2_n_K', '20210421_2_n_M', '20210428_2_n_P', '20210511_2_n_T'};
+    'Chabichou', 'second', 'evening', 'ferret-music', basePaths.Chabichou, {'20210330_2_n_C', '20210406_2_n_E', '20210409_2_n_H', '20210415_2_n_J', '20210427_2_n_O', '20210429_2_n_Q', '20210505_2_n_S'};
+    'Chabichou', 'second', 'evening', 'music-speech', basePaths.Chabichou, {'20210407_2_n_F', '20210420_2_n_L', '20210422_2_n_N', '20210504_2_n_R', '20210512_2_n_U'};
+    'Chabichou', 'second', 'evening', 'ferret-speech', basePaths.Chabichou, {'20210401_2_n_D', '20210408_2_n_G', '20210416_2_n_K', '20210421_2_n_M', '20210428_2_n_P', '20210511_2_n_T'};
     
     % Edel
-    'Edel', 'first', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220419_1_m_C', '20220422_1_m_F', '20220519_1_m_U', '20220523_1_m_W'};
-    'Edel', 'first', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220415_1_m_A', '20220420_1_m_D', '20220518_1_m_T', '20220520_1_m_V', '20220524_1_m_X'};
-    'Edel', 'first', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220418_1_m_B', '20220421_1_m_E', '20220517_1_m_S'};
+    'Edel', 'first', 'morning', 'ferret-music', basePaths.Edel, {'20220419_1_m_C', '20220422_1_m_F', '20220519_1_m_U', '20220523_1_m_W'};
+    'Edel', 'first', 'morning', 'music-speech', basePaths.Edel, {'20220415_1_m_A', '20220420_1_m_D', '20220518_1_m_T', '20220520_1_m_V', '20220524_1_m_X'};
+    'Edel', 'first', 'morning', 'ferret-speech', basePaths.Edel, {'20220418_1_m_B', '20220421_1_m_E', '20220517_1_m_S'};
     
-    'Edel', 'first', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220429_1_n_J', '20220504_1_n_M', '20220509_1_n_O', '20220512_1_n_R'};
-    'Edel', 'first', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220426_1_n_G', '20220503_1_n_L', '20220510_1_n_P'};
-    'Edel', 'first', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220427_1_n_H', '20220428_1_n_I','20220502_1_n_K', '20220505_1_n_N', '20220511_1_n_Q'};
+    'Edel', 'first', 'evening', 'ferret-music', basePaths.Edel, {'20220429_1_n_J', '20220504_1_n_M', '20220509_1_n_O', '20220512_1_n_R'};
+    'Edel', 'first', 'evening', 'music-speech', basePaths.Edel, {'20220426_1_n_G', '20220503_1_n_L', '20220510_1_n_P'};
+    'Edel', 'first', 'evening', 'ferret-speech', basePaths.Edel, {'20220427_1_n_H', '20220428_1_n_I','20220502_1_n_K', '20220505_1_n_N', '20220511_1_n_Q'};
     
-    'Edel', 'second', 'morning', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220430_2_m_J', '20220505_2_m_M', '20220510_2_m_O', '20220513_2_m_R'};
-    'Edel', 'second', 'morning', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220427_2_m_G', '20220504_2_m_L', '20220511_2_m_P'};
-    'Edel', 'second', 'morning', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220428_2_m_H', '20220429_2_m_I', '20220503_2_m_K', '20220506_2_m_N', '20220512_2_m_Q'};
+    'Edel', 'second', 'morning', 'ferret-music', basePaths.Edel, {'20220430_2_m_J', '20220505_2_m_M', '20220510_2_m_O', '20220513_2_m_R'};
+    'Edel', 'second', 'morning', 'music-speech', basePaths.Edel, {'20220427_2_m_G', '20220504_2_m_L', '20220511_2_m_P'};
+    'Edel', 'second', 'morning', 'ferret-speech', basePaths.Edel, {'20220428_2_m_H', '20220429_2_m_I', '20220503_2_m_K', '20220506_2_m_N', '20220512_2_m_Q'};
     
-    'Edel', 'second', 'evening', 'ferret-music', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220419_2_n_C', '20220422_2_n_F','20220519_2_n_U', '20220523_2_n_W'};
-    'Edel', 'second', 'evening', 'music-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220415_2_n_A', '20220420_2_n_D', '20220518_2_n_T', '20220520_2_n_V', '20220524_2_n_X'};
-    'Edel', 'second', 'evening', 'ferret-speech', 'Z:\Arsenii\React_Passive\Processed_data\Edel', {'20220418_2_n_B', '20220421_2_n_E', '20220517_2_n_S'};
+    'Edel', 'second', 'evening', 'ferret-music', basePaths.Edel, {'20220419_2_n_C', '20220422_2_n_F','20220519_2_n_U', '20220523_2_n_W'};
+    'Edel', 'second', 'evening', 'music-speech', basePaths.Edel, {'20220415_2_n_A', '20220420_2_n_D', '20220518_2_n_T', '20220520_2_n_V', '20220524_2_n_X'};
+    'Edel', 'second', 'evening', 'ferret-speech', basePaths.Edel, {'20220418_2_n_B', '20220421_2_n_E', '20220517_2_n_S'};
 
     % Kosichka
     'Kosichka', 'first', 'morning', 'ferret-music', basePaths.Kosichka, {};
-    'Kosichka', 'first', 'morning', 'music-speech', basePaths.Kosichka, {'20251128_1_m_p14'};
+    'Kosichka', 'first', 'morning', 'music-speech', basePaths.Kosichka, {}; % Corrupted session:'20251128_1_m_p14'
     'Kosichka', 'first', 'morning', 'ferret-speech', basePaths.Kosichka, {'20251120_1_m_p06'};
     
-    'Kosichka', 'first', 'evening', 'ferret-music', basePaths.Kosichka, {'20251117_1_n_p19', '20251124_1_n_p10', '20251215_1_n_p04'};
+    'Kosichka', 'first', 'evening', 'ferret-music', basePaths.Kosichka, {'20251117_1_n_p19', '20251215_1_n_p04'}; %'20251124_1_n_p10'
     'Kosichka', 'first', 'evening', 'music-speech', basePaths.Kosichka, {'20251114_1_n_p05', '20251208_1_n_p20'};
-    'Kosichka', 'first', 'evening', 'ferret-speech', basePaths.Kosichka, {'20251201_1_n_p15'};
+    'Kosichka', 'first', 'evening', 'ferret-speech', basePaths.Kosichka, {}; %'20251201_1_n_p15'
     
     'Kosichka', 'second', 'morning', 'ferret-music', basePaths.Kosichka, {};
     'Kosichka', 'second', 'morning', 'music-speech', basePaths.Kosichka, {};
@@ -100,11 +115,11 @@ data = {
     'Ficello', 'first', 'morning', 'music-speech', basePaths.Ficello, {'20251204_1_m_p05'};
     'Ficello', 'first', 'morning', 'ferret-speech', basePaths.Ficello, {'20251215_1_m_p06', '20260128_1_m_p13'};
     
-    'Ficello', 'first', 'evening', 'ferret-music', basePaths.Ficello, {'20260119_1_n_p19'};
+    'Ficello', 'first', 'evening', 'ferret-music', basePaths.Ficello, {'20260119_1_n_p19', '20260202_1_n_p12'};
     'Ficello', 'first', 'evening', 'music-speech', basePaths.Ficello, {'20260107_1_n_p20', '20260112_1_n_p14', '20260122_1_n_p8'};
     'Ficello', 'first', 'evening', 'ferret-speech', basePaths.Ficello, {'20260109_1_n_p15', '20260114_1_n_p28'};
     
-    'Ficello', 'second', 'morning', 'ferret-music', basePaths.Ficello, {'20260121_2_m_p19'};
+    'Ficello', 'second', 'morning', 'ferret-music', basePaths.Ficello, {'20260121_2_m_p19', '20260203_2_m_p12'};
     'Ficello', 'second', 'morning', 'music-speech', basePaths.Ficello, {'20251205_2_m_p05', '20260113_2_m_p14'};
     'Ficello', 'second', 'morning', 'ferret-speech', basePaths.Ficello, {'20251216_2_m_p06'};
     

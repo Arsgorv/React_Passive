@@ -45,7 +45,7 @@ Notes:
 %}
 
 %% Select sessions
-project = 'RP'; % 'RA' 'Tonotopy', 'Arousal', 'RP'
+project = 'Arousal'; % 'RA' 'Tonotopy', 'Arousal', 'RP'
 
 % Form the list of sessions
 selection = 4;
@@ -54,9 +54,12 @@ Dir{1} = PathForExperimentsReactPassive('Chabichou', 'all', 'all', 'all');
 Dir{2} = PathForExperimentsReactPassive('Edel', 'all', 'all', 'all');
 Dir{3} = PathForExperimentsReactPassive('Kosichka', 'all', 'all', 'all');
 Dir{4} = PathForExperimentsReactPassive('Ficello', 'all', 'all', 'all');
+Dir{5} =  PathForExperimentsArousal('Ficello', 'atropine', 'all');
+Dir{6} = PathForExperimentsArousal('Ficello', 'saline', 'all');
 
-Dir{5} = MergePathForExperiment(Dir{1}, Dir{2});
 
+Dir{7} = MergePathForExperiment(Dir{5}, Dir{6});
+sessions = [Dir{6}.path'; Dir{5}.path'];
 sessions = Dir{selection}.path';
 
 %% PreProcessing: Sleep Scoring
